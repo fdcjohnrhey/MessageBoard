@@ -28,9 +28,23 @@ class UsersController extends AppController {
 
 	public function login(){
 		if ($this->request->is('post')) {	
-			if ($this->Auth->login($this->request->data['User'])) {
-				return $this->redirect(array('action' => 'index'));
-			} else {
+			//get current user	
+			$loginDetails=$this->User->find('first',array(				
+				'conditions' => array(
+					'user.email' =>$this->request->data['User']['email'],
+					'AND'=> array(
+						'user.password'=>AuthComponent::password($this->data['User']['password'])
+					)
+				)
+			));
+
+			if($loginDetails){
+				if ($this->Auth->login($this->request->data['User'])) {
+					return $this->redirect(array('action' => 'index'));
+				} else {
+					$this->Flash->error(__('Incorrect email/password.'));
+				}
+			}else{
 				$this->Flash->error(__('Incorrect email/password.'));
 			}
 		}
@@ -39,13 +53,13 @@ class UsersController extends AppController {
 
 	public function logout(){		
 		//get current user	
-		$current_user=$this->User->find('first',array(				
+		$currentUser=$this->User->find('first',array(				
 			'conditions' => array('user.email' =>$this->Auth->user('email'))
 		));
 		//check if user found
-		if($current_user) {
+		if($currentUser) {
 			//update last_login_time field to current time
-			$this->User->id=$current_user['User']['id'];
+			$this->User->id=$currentUser['User']['id'];
 			$this->User->set('last_login_time',date("Y-m-d h:i:s"));
 			//save to db and logout
 			if($this->User->save()){
@@ -62,14 +76,14 @@ class UsersController extends AppController {
 	public function index() {
 		$this->User->recursive = 0;		
 		//get current user		
-		$current_user=$this->User->find('first',array(				
+		$currentUser=$this->User->find('first',array(				
 			'conditions' => array('user.email' =>$this->Auth->user('email'))
 		));
 		//check if user found
-		if($current_user){
-			$current_user=$current_user;
+		if($currentUser){
+			$currentUser=$currentUser;
 		}
-		$this->set(array('users'=> $this->Paginator->paginate(),'current_user'=>$current_user));
+		$this->set(array('users'=> $this->Paginator->paginate(),'currentUser'=>$currentUser));
 	}
 
 /**
@@ -119,6 +133,19 @@ class UsersController extends AppController {
 			throw new NotFoundException(__('Invalid user'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
+			$this->User->id=$id;
+			$file = $this->request->data['User']['image'];
+			if($file){
+				if (!file_exists($target_file)) {
+				    move_uploaded_file($file['tmp_name'],WWW_ROOT.'img/'. $file['name']);	
+				    $this->request->data['User']['image'] = $file['name'];
+				}else{
+					$this->Flash->error(__('This image already exists.'));
+				}
+			}else{
+				$this->request->data['User']['image'] = $this->User->image;
+			}
+
 			if ($this->User->save($this->request->data)) {
 				$this->Flash->success(__('The user has been saved.'));
 				return $this->redirect(array('action' => 'index'));

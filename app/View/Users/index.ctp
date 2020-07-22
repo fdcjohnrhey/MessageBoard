@@ -1,5 +1,3 @@
-<?php var_dump($current_user); ?>
-
 <div class="users index">
 	<h2><?php echo __('Users'); ?></h2>
 	<table cellpadding="0" cellspacing="0">
@@ -63,7 +61,7 @@
 <div style="float: right;">
 <?php
 	if(AuthComponent::user()){
-		echo $this->Html->link('Profile',array('controller'=>'users','action'=>'index'));
+		echo $this->Html->link('Edit Profile',array('controller'=>'users','action'=>'edit',$currentUser['User']['id']));
 		echo $this->Html->link('Logout',array('controller'=>'users','action'=>'logout'));
 	}else{
 		echo $this->Html->link('Login',array('controller'=>'users', 'action'=>'login'));
@@ -71,9 +69,28 @@
 ?>
 </div>
 <div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
+	<h3><?php echo __('Profile'); ?></h3>
+	<?php echo $this->Html->image($currentUser['User']['image'], array('alt' =>'test', 'border' => '0','width'=>'200')); ?>
 	<ul>
-		<li><?php echo $this->Html->link(__('New User'), array('action' => 'add')); ?></li>
+		<?php
+			switch($currentUser['User']['gender']){
+				case 1;
+					$gender='Male';
+					break;
+				case 2;
+					$gender='Female';
+					break;
+				default;
+					$gender='None';
+			}
+		?>
+		<li><?php echo $currentUser['User']['name'] ?></li>
+		<li>Gender: <?php echo $gender; ?></li>
+		<li>Birthdate: <?php echo $currentUser['User']['birthdate'] ?></li>
+		<li>Joined: <?php echo $currentUser['User']['created'] ?></li>
+		<li>Last Login: <?php echo $currentUser['User']['last_login_time'] ?></li>
+		<li>Hobby:</li>
+		<li><?php echo $currentUser['User']['hubby'] ?></li>
 	</ul>
 </div>
 

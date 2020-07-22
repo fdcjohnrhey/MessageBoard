@@ -34,6 +34,16 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
+	<?php echo $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery.ui.datepicker.min.css'); ?>
+	<?php echo $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.min.css');?>
+	<?php echo $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.0/i18n/jquery-ui.min.js'); ?>
+
+	<script type="text/javascript">
+		$(document).ready(function(){  
+	        $("#datepick").datepicker();
+	    });
+	</script>
+
 </head>
 <body>
 	<div id="container">
