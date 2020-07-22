@@ -23,7 +23,7 @@ class UsersController extends AppController {
  */
 	public function beforeFilter(){
 		// allow register page to be viewed without login
-		$this->Auth->allow('add');
+		$this->Auth->allow('add','login');
 	}
 
 	public function login(){

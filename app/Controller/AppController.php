@@ -32,15 +32,26 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 	public $components = array(
-		'Auth' => array(            
-			'authenticate' => array(
-	        	'Form' => array(
-	            	'fields' => array('email' => 'email','password' => 'password')
-	        	)
-	        )
-        ),
-        'Session',
+		'Session',
+		'Cookie',
+		'Auth' => array(
+			// - redirect the user here after logging in
+			'loginRedirect' => array('controller' => 'home', 'action' => 'index'),
+
+			// - redirect the user here on logout
+			'logoutRedirect' => array('controller' => 'login', 'action' => 'index'),
+
+			// - redirect the user here if the page accessed is forbidden
+			'loginAction' => 'login',
+
+			// - if user is not allowed to access a page
+			'authError' => 'your account is not valid',
+
+			// - when login encountered errpr
+			'loginError' => 'your credentials are incorrect'
+		)
 	);
+
 	public function isAuthorized($user){
 		return true;
 	}
