@@ -58,13 +58,13 @@ class MessagesController extends AppController {
 				$this->Messagelist->query("INSERT INTO messagelist (user_id,to_id,from_id,message_id) VALUES (".$currentUser['User']['id'].",
 					".$this->request->data['Message']['to_id'].",".$currentUser['User']['id'].",".$this->Message->getInsertID().")");
 					$this->Flash->success(__('The message has been saved.'));
-					// return $this->redirect(array('action' => 'index'));
+					return $this->redirect(array('controller'=>'messagelists','action' => 'index',$currentUser['User']['id']));
 			} else {
 				$this->Flash->error(__('The message could not be saved. Please, try again.'));
 			}
 		}
 		$users = $this->User->find('list');
-		$this->set(compact('users'));
+		$this->set(compact('users','currentUser'));
 	}
 
 /**
@@ -121,10 +121,6 @@ class MessagesController extends AppController {
 	    	Configure::write('debug', 0);
 	  	}
 	  	$keyword = $this->request->query('search');
-		// $result = $this->User->find('all', array(
-		// 	'conditions' => array("name LIKE" => "%$keyword%"),
-		// 	'fields' => array('id', 'name as text')
-		// ));
 		$users = $this->User->find('all', array(
 			'conditions' => array("User.name LIKE" => "%$keyword%"),
 			'fields' => array('User.id', 'User.name as text'),
@@ -137,5 +133,32 @@ class MessagesController extends AppController {
 		}
 			
         return json_encode($list);	
+	}
+
+	public function AddNewMessage(){
+
+  		$this->autoRender=false;
+		if($this->RequestHandler->isAjax()){
+	    	Configure::write('debug', 0);
+	  	}
+
+	  	$currentUser=$this->User->find('first',array(				
+			'conditions' => array('user.email' =>$this->Auth->user('email')),
+			'fields' => array('User.id')
+		));
+
+	  	$this->Message->create();
+		if ($this->Message->saveAssociated($this->request->data)) {
+			$this->Messagelist->query("INSERT INTO messagelist (user_id,to_id,from_id,message_id) VALUES (".$currentUser['User']['id'].",
+				".$this->request->data['Message']['to_id'].",".$currentUser['User']['id'].",".$this->Message->getInsertID().")");
+				$this->Flash->success(__('The message has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+				return json_encode('The message has been saved');	
+		} else {
+			$this->Flash->error(__('The message could not be saved. Please, try again.'));
+		}
+		return(json_encode($this->request->data));
+			
+        
 	}
 }

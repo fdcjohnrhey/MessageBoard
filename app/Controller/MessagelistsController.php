@@ -13,7 +13,9 @@ class MessagelistsController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator');
+
+	public $uses = array('User','Messagelist');
+	public $components = array('Paginator','Flash');
 
 /**
  * index method
@@ -22,12 +24,6 @@ class MessagelistsController extends AppController {
  */
 	public function index($id = null) {
 		$this->Messagelist->recursive = 0;
-		// $list = $this->Messagelist->find('all', array(
-		// 	'conditions' => array('user_id'=>$id),
-		// 	'group' => array('to_id'),
-		// 	'having' => array('COUNT(to_id) >' => 1),
-		// 	'order' => 'Message.created DESC'
-		// ));
 		$db = $this->Messagelist->getDataSource();
 		$subQuery = $db->buildStatement(
 		    array(
@@ -41,13 +37,18 @@ class MessagelistsController extends AppController {
 		    $this->Messagelist
 		);
 
-		$subQuery = 'Messagelist.id IN (' . $subQuery . ') order by Messagelist.id DESC';
+		$subQuery = 'Messagelist.id IN (' . $subQuery . ') order by Messagelist.id DESC ';
 		$subQueryExpression = $db->expression($subQuery);
 		$conditions[] = $subQueryExpression;
-		$list = $this->Messagelist->find('all', compact('conditions'));
+		$list = $this->Messagelist->find('all', compact('conditions'));$this->paginate('Messagelist',$conditions);
+
+		$currentUser=$this->User->find('first',array(				
+			'conditions' => array('user.email' =>$this->Auth->user('email')),
+			'fields' => array('User.id')
+		));
 
 		$users = $this->Messagelist->User->find('all',array('fields'=>array('id','name')));
-		$this->set(array('users'=>$users, 'list'=>$list));
+		$this->set(array('users'=>$users, 'list'=>$list, 'currentUser'=>$currentUser));
 	}
 
 /**
@@ -57,12 +58,20 @@ class MessagelistsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function view($id = null) {
-		if (!$this->Messagelist->exists($id)) {
-			throw new NotFoundException(__('Invalid messagelist'));
-		}
-		$options = array('conditions' => array('Messagelist.' . $this->Messagelist->primaryKey => $id));
-		$this->set('messagelist', $this->Messagelist->find('first', $options));
+	public function view($to_id = null) {
+		$options = array(
+			'conditions' => array('to_id' => $to_id),
+			'fields' => array('User.Name','Message.content','Message.created','Message.modified','Messagelist.*'),		
+			'order' => 'id DESC'
+		);
+		$messagelist = $this->Messagelist->find('all', $options);
+		$currentUser=$this->User->find('first',array(				
+			'conditions' => array('user.email' =>$this->Auth->user('email')),
+			'fields' => array('User.id')
+		));
+		$convoWith = $this->User->find('first',array('conditions'=> 'id ='.$to_id));
+		$users = $this->Messagelist->User->find('all',array('fields'=>array('id','name')));
+		$this->set(compact('messagelist','currentUser','convoWith','users'));
 	}
 
 /**
