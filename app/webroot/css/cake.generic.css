@@ -741,3 +741,11 @@ pre {
 #url-rewriting-warning {
 	display:none;
 }
+
+
+#user-select{
+	width:100%;
+}
+.select2-results__option{
+	color: black;
+}

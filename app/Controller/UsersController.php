@@ -13,7 +13,7 @@ class UsersController extends AppController {
  *
  * @var array
  */
-	public $uses = array('User');
+	public $uses = array('User','Message');
 	public $components = array('Paginator','Session','Flash','RequestHandler');
 
 /**
@@ -132,18 +132,23 @@ class UsersController extends AppController {
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Invalid user'));
 		}
-		if ($this->request->is(array('post', 'put'))) {
-			$this->User->id=$id;
+		if ($this->request->is(array('post', 'put'))) {			
+			$this->User->id=$id;		
+			$this->User->set('modified',date("Y-m-d h:i:s"));
+			$this->request->data['User']['modified_ip']= $this->RequestHandler->getClientIp();		
 			$file = $this->request->data['User']['image'];
-			if($file){
-				if (!file_exists($target_file)) {
+			$currentUser=$this->User->find('first',array(				
+				'conditions' => array('user.id' =>$id)
+			));
+			if($file['name']!=''){
+				if (!file_exists($file)) {
 				    move_uploaded_file($file['tmp_name'],WWW_ROOT.'img/'. $file['name']);	
 				    $this->request->data['User']['image'] = $file['name'];
 				}else{
 					$this->Flash->error(__('This image already exists.'));
 				}
 			}else{
-				$this->request->data['User']['image'] = $this->User->image;
+				$this->request->data['User']['image'] = $currentUser['User']['image'];
 			}
 
 			if ($this->User->save($this->request->data)) {

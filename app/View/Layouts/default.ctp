@@ -29,26 +29,22 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->Html->meta('icon');
 
 		echo $this->Html->css('cake.generic');
+	?>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+	<?php
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
-	?>
-	<?php echo $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery.ui.datepicker.min.css'); ?>
-	<?php echo $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.min.css');?>
-	<?php echo $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.0/i18n/jquery-ui.min.js'); ?>
-
-	<script type="text/javascript">
-		$(document).ready(function(){  
-	        $("#datepick").datepicker();
-	    });
-	</script>
+	?>		
+  	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
 
 </head>
 <body>
 	<div id="container">
 		<div id="header">
-			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
+			<h1>MessageBoard</h1>
 		</div>
 		<div id="content">
 

@@ -36,20 +36,21 @@ class AppController extends Controller {
 		'Cookie',
 		'Auth' => array(
 			// - redirect the user here after logging in
-			'loginRedirect' => array('controller' => 'home', 'action' => 'index'),
+			'loginRedirect' => array('controller' => 'users', 'action' => 'index'),
 
 			// - redirect the user here on logout
-			'logoutRedirect' => array('controller' => 'login', 'action' => 'index'),
+			'logoutRedirect' => array('controller' => 'users', 'action' => 'login'),
 
 			// - redirect the user here if the page accessed is forbidden
-			'loginAction' => 'login',
+			'loginAction' => array('controller' => 'users', 'action' => 'login'),
 
 			// - if user is not allowed to access a page
 			'authError' => 'your account is not valid',
 
 			// - when login encountered errpr
 			'loginError' => 'your credentials are incorrect'
-		)
+		),
+		'DebugKit.Toolbar'
 	);
 
 	public function isAuthorized($user){

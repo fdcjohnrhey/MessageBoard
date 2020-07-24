@@ -10,7 +10,7 @@
 		echo $this->Form->input('name');
 		$options = array('0' => 'None','1' => 'Male', '2' => 'Female');
 		echo $this->Form->input('gender', array('type'=>'select','options'=>$options));
-		echo $this->Form->input('birthdate',array('type'=>'date'));
+		echo $this->Form->input('birthdate',array('type'=>'text','id'=>'datepick'));
 		echo $this->Form->input('hubby');
 	?>
 	</fieldset>
@@ -18,3 +18,15 @@
 </div>
 
 
+<script>
+	$(function() {
+		$('#datepick').datepicker({
+			dateFormat: "yy-mm-dd",
+		});
+
+		
+	});
+	function dateChanged(ev) {
+		console.log(ev);
+	}
+</script>
