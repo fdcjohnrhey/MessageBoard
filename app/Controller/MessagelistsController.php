@@ -86,7 +86,7 @@ class MessagelistsController extends AppController {
 
 	public function getMessagelist(){
 
-    	$this->autoRender=false;
+        $this->autoRender=false;
 		$this->layout = null ;
 		$options = array(
 			'conditions' => array('OR'=>array('to_id' => $this->request->data['to_id'],'from_id' => $this->request->data['to_id'])),
@@ -96,11 +96,9 @@ class MessagelistsController extends AppController {
 		);
 		$this->paginate = $options;
 		$messageList = $this->Messagelist->find('all',$options);
-
 		$users = $this->Messagelist->User->find('all',array('fields'=>array('id','name')));
 		$view = new View($this, false);
 		$view->viewPath = 'Elements';
-
 		$view->set(compact('messageList','users'));	
 		
 		return json_encode($view->render('messagebody'));
