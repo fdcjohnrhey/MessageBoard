@@ -86,7 +86,7 @@ class MessagelistsController extends AppController {
 
 	public function getMessagelist(){
 
-        $this->autoRender=false;
+        	$this->autoRender=false;
 		$this->layout = null ;
 		$options = array(
 			'conditions' => array('OR'=>array('to_id' => $this->request->data['to_id'],'from_id' => $this->request->data['to_id'])),
