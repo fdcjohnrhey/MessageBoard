@@ -17,7 +17,7 @@ class MessagesController extends AppController {
 		$this->set('messages', $this->Paginator->paginate());
 	}
 
-	public function view($id = null) {
+	public function view($id) {
 		if (!$this->Message->exists($id)) {
 			throw new NotFoundException(__('Invalid message'));
 		}
@@ -69,6 +69,7 @@ class MessagesController extends AppController {
 	public function AddNewMessage(){
 
   		$this->autoRender=false;
+		$this->layout = null ;
 		if($this->RequestHandler->isAjax()){
 	    	Configure::write('debug', 0);
 	  	}
@@ -82,7 +83,6 @@ class MessagesController extends AppController {
 		if ($this->Message->saveAssociated($this->request->data)) {
 			$this->Messagelist->query("INSERT INTO messagelist (user_id,to_id,from_id,message_id) VALUES (".$currentUser['User']['id'].",
 				".$this->request->data['to_id'].",".$currentUser['User']['id'].",".$this->Message->getInsertID().")");
-
 			
 		} else {
 			$this->Flash->error(__('The message could not be saved. Please, try again.'));
@@ -91,9 +91,17 @@ class MessagesController extends AppController {
 		$options = array(
 			'conditions' => array('to_id' => $this->request->data['to_id']),
 			'fields' => array('User.Name','Message.content','Message.created','Message.modified','Messagelist.*'),		
-			'order' => 'id DESC'
+			'order' => 'id DESC',
+			'limit' => $this->request->data['limit']
 		);
-		$messagelist = $this->Messagelist->find('all', $options);
-        return json_encode($messagelist);
+
+		$this->paginate = $options;
+		$messageList = $this->Messagelist->find('all',$options);
+		$users = $this->Messagelist->User->find('all',array('fields'=>array('id','name')));
+        $view = new View($this, false);
+		$view->viewPath = 'Elements';
+		$view->set(compact('messageList','users'));		
+		
+		return json_encode($view->render('messagebody'));
 	}
 }

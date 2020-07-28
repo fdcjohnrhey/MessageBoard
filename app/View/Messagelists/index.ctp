@@ -25,26 +25,13 @@
 		<td><?php echo h($messagelist['User']['name']); ?>&nbsp;</td>
 		<td><?php echo h($messagelist['Message']['modified']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $messagelist['Messagelist']['to_id'])); ?>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $messagelist['Messagelist']['from_id'])); ?>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $messagelist['Messagelist']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $messagelist['Messagelist']['id']))); ?>
 		</td>
 	</tr>
 	<?php endforeach; ?>
 	</tbody>
 	</table>
-	<p>
-	<?php
-	// echo $this->Paginator->counter(array(
-	// 	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-	// ));
-	?>	</p>
-	<div class="paging">
-	<?php
-		// echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-		// echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('LOAD MORE') . ' >', array(), null, array('class' => 'next disabled'));
-	?>
-	</div>
 </div>
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>

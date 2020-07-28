@@ -76,7 +76,7 @@ class UsersController extends AppController {
 		$this->set(array('users'=> $this->Paginator->paginate(),'currentUser'=>$currentUser));
 	}
 
-	public function view($id = null) {
+	public function view($id) {
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Invalid user'));
 		}
@@ -92,14 +92,14 @@ class UsersController extends AppController {
 			//save to database and redirect to confirm page
 			if ($this->User->save($this->request->data)) {
 			 	$this->Auth->login($this->request->data['User']);		
-				return $this->redirect(array('action' => 'thankyou'));
+				return $this->redirect(array('action' => 'thankYou'));
 			} else {
 				$this->Flash->error(__('The user could not be saved. Please, try again.'));
 			}
 		}
 	}
 
-	public function edit($id = null) {
+	public function edit($id) {
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Invalid user'));
 		}
@@ -148,7 +148,7 @@ class UsersController extends AppController {
 		return $this->redirect(array('action' => 'index'));
 	}
 
-	public function thankyou() {
+	public function thankYou() {
 		$this->Flash->success(__('Thank you for registering.'));
 	}
 

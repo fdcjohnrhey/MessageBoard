@@ -11,15 +11,15 @@ class MessagelistsController extends AppController {
 	public $uses = array('User','Messagelist');
 	public $components = array('Paginator','Flash');
 
-	public function index($id = null) {
+	public function index($id) {
 		$this->Messagelist->recursive = 0;
 		$db = $this->Messagelist->getDataSource();
 		$subQuery = $db->buildStatement(
 		    array(
 		        'table'      => $db->fullTableName($this->Messagelist),
 		        'alias'		 => 'Messagelist',
-		        'conditions' => array('user_id'=>$id),
-		        'group'      => array('to_id'),
+		        'conditions' => array('to_id' => $id,),
+		        'group'      => array('to_id','from_id'),
 		        'fields' 	 => array('Max(Messagelist.id)'),
 		    ),
 		    $this->Messagelist
@@ -29,7 +29,6 @@ class MessagelistsController extends AppController {
 		$subQueryExpression = $db->expression($subQuery);
 		$conditions[] = $subQueryExpression;
 		$list = $this->Messagelist->find('all', compact('conditions'));
-		$this->paginate('Messagelist',$conditions);
 
 		$currentUser=$this->User->find('first',array(				
 			'conditions' => array('user.email' =>$this->Auth->user('email')),
@@ -41,30 +40,37 @@ class MessagelistsController extends AppController {
 	}
 
 
-	public function view($to_id = null) {
+	public function view($to_id) {
+		
 		$options = array(
-			'conditions' => array('to_id' => $to_id),
+			'conditions' => array('OR'=>array('to_id' => $to_id,'user_id' => $to_id)),
 			'fields' => array('User.Name','Message.content','Message.created','Message.modified','Messagelist.*'),		
 			'order' => 'id DESC',
 			'limit' => 10
 		);
 		$this->paginate = $options;
-		$messagelist = $this->paginate('Messagelist');
+		$messageList = $this->paginate('Messagelist');
 		$currentUser=$this->User->find('first',array(				
 			'conditions' => array('user.email' =>$this->Auth->user('email')),
 			'fields' => array('User.id')
 		));
-		$convoWith = $this->User->find('first',array('conditions'=> 'id ='.$to_id));
+		if($to_id == $currentUser['User']['id']){
+			$getLast = $this->Messagelist->find('first',array('order' => array('Messagelist.id' => 'DESC')));
+			$convo=$getLast['Messagelist']['from_id'];
+		}else{
+			$convo=$to_id;
+		}
+		$convoWith = $this->User->find('first',array('conditions'=> 'id ='.$convo));
 		$users = $this->Messagelist->User->find('all',array('fields'=>array('id','name')));
-		$this->set(compact('messagelist','currentUser','convoWith','users'));
+		$this->set(compact('messageList','currentUser','convoWith','users','convo'));
 		$view = new View($this, false);
 		$view->viewPath = 'Elements';
 		$view->render('messagebody');
-		$view->set('messagelist', $messagelist);
+		$view->set(compact('messageList'));
 	}
 
 
-	public function delete($id = null) {
+	public function delete($id) {
 		$this->Messagelist->id = $id;
 		if (!$this->Messagelist->exists()) {
 			throw new NotFoundException(__('Invalid messagelist'));
@@ -83,20 +89,19 @@ class MessagelistsController extends AppController {
     	$this->autoRender=false;
 		$this->layout = null ;
 		$options = array(
-			'conditions' => array('to_id' => $this->request->data['to_id']),
+			'conditions' => array('OR'=>array('to_id' => $this->request->data['to_id'],'from_id' => $this->request->data['to_id'])),
 			'fields' => array('User.Name','Message.content','Message.created','Message.modified','Messagelist.*'),		
 			'order' => 'id DESC',
 			'limit' => $this->request->data['limit']
 		);
 		$this->paginate = $options;
-		$messagelist = $this->Messagelist->find('all',$options);
+		$messageList = $this->Messagelist->find('all',$options);
 
 		$users = $this->Messagelist->User->find('all',array('fields'=>array('id','name')));
 		$view = new View($this, false);
 		$view->viewPath = 'Elements';
 
-		$view->set(compact('messagelist','users'));
-		
+		$view->set(compact('messageList','users'));	
 		
 		return json_encode($view->render('messagebody'));
 	}

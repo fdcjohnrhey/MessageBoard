@@ -1,21 +1,12 @@
-<?php var_dump($messagelist[9]); ?>
 <div class="messagelists view">
 <h2>Conversation with <?php echo $convoWith['User']['name']; ?></h2>
-<form id="reply_message" name="reply_message" action="javascript:void(0);" method="post">
-	<input type="text" name="content" id="new_message">
-	<input type="hidden" name="to_id" id="new_message" value="<?php echo $convoWith['User']['id']; ?>">	
+<form id="reply-message" name="reply_message" action="javascript:void(0);" method="post" style="margin-bottom: 50px;width: 100%">
+	<input type="text" name="content" id="new-message">
+	<input type="hidden" name="to_id" id="new-message" value="<?php echo $convoWith['User']['id']; ?>">	
 
-    <button id="send_message" name="send_message" type="button" class="btn btn-primary" style="float: left;">Reply</button>
+    <button id="send-message" name="send-message" type="button" class="btn btn-primary" style="float: right;">Reply Message</button>
 </form>
-<table cellpadding="0" cellspacing="0">
-	<thead>
-		<tr>
-				<th>Message</th>
-				<th>Created</th>
-				<th>From</th>
-				<th class="actions">Actions</th>
-		</tr>
-	</thead>
+<table cellpadding="0" cellspacing="0">	
 	
 
 <?php echo $this->element('messagebody');?>
@@ -25,9 +16,8 @@
 	
 echo $this->Html->script('jquery', false);
 $message_count = $this->Paginator->counter('%count%');
-echo $message_count;
 ?>
-<a href="javascript:void(0);" id='show_more'>LOAD MORE</a>
+<a href="javascript:void(0);" id='show-more'>LOAD MORE</a>
 </div>
 </div>
 <div class="actions">
@@ -45,7 +35,26 @@ echo $message_count;
 	$(document).ready(function() { 		
 		var base_url = '<?php echo $this->webroot; ?>';
 		var from= '<?php echo $convoWith['User']['id']; ?>';
-		$('.confirm_delete').click(function(){
+		var limit=10;
+		var message_count = "<?php echo $message_count; ?>";
+		$('#send-message').attr('disabled','disabled');	
+		$('#new-message').val('');
+
+		if(message_count< limit){
+			limit = message_count;
+			$('#show-more').addClass('disabled');
+		}
+		
+		$('#new-message').on('keyup', function(){
+			var message = $(this).val();
+			if(message!=""){		
+				$('#send-message').removeAttr('disabled');
+			}else{
+				$('#send-message').attr('disabled','disabled');	
+			}
+		});
+
+		$('#convo-body').on('click', '.confirm-delete', function(){
 			var result = confirm('Are you sure you want to delete this?');
 			if(result) {
 				console.log($(this).closest('tr'));
@@ -68,39 +77,38 @@ echo $message_count;
 			return false;
 		});
 
-		$('#send_message').click(function(){
-			var message = $('#new_message').val();
+		$('#send-message').click(function(){
+			var message = $('#new-message').val();
+			
 			var data = {
 				to_id: "<?php echo $convoWith['User']['id']; ?>",
-				content: message
+				content: message,
+				limit : limit
 			};
-			console.log(data);
 			$.ajax({
 				type:"POST",
 				url: base_url+'messages/AddNewMessage',
 				data: data,
 				dataType: "json",
 				success:function(response){
-					console.log(response);					
+					//console.log(response);					
 				},
 				error:function(error){
 					console.log(error);
 				},
 				complete: function(response){
-					console.log(JSON.parse(response.responseText));		
-					
+					$('#new-message').val('');
+					$('#convo-body').html(JSON.parse(response.responseText));							
 				}
 			});
 		});
 
-		var limit=10;
-
-		$('#show_more').click(function(e){
+		$('#show-more').click(function(e){
 			limit = limit+10;
-			var message_count = '<?php echo $message_count; ?>';
 			
-			if(limit >= message_count){
+			if(limit >= message_count ||  message_count< limit){
 				limit = message_count;
+				$(this).addClass('disabled');
 			}
 
 			var data = {
@@ -113,11 +121,14 @@ echo $message_count;
 				url: base_url+'messagelists/getMessagelist',
 				data: data,
 				dataType: "json",
-				success:function(response){
-					$('#convoBody').html(response);				
+				success:function(response){	
+
 				},
 				error:function(error){
 					console.log(error);
+				},
+				complete: function(response){
+					$('#convo-body').html(JSON.parse(response.responseText));								
 				}
 			});
 		});

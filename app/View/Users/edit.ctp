@@ -10,17 +10,23 @@
 		echo $this->Form->input('name');
 		$options = array('0' => 'None','1' => 'Male', '2' => 'Female');
 		echo $this->Form->input('gender', array('type'=>'select','options'=>$options));
-		echo $this->Form->input('birthdate',array('type'=>'text','id'=>'datepick'));
+		echo $this->Form->input('birthdate',array('type'=>'text','id'=>'date-pick'));
 		echo $this->Form->input('hubby');
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>
 </div>
-
+<div class="actions">
+	<h3><?php echo __('Actions'); ?></h3>
+	<ul>
+		<li><?php echo $this->Html->link(__('Profile'), array('controller' => 'users', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('Logout'), array('controller' => 'users', 'action' => 'logout')); ?> </li>
+	</ul>
+</div>
 
 <script>
 	$(document).ready(function() { 	
-		$('#datepick').datepicker({
+		$('#date-pick').datepicker({
 			dateFormat: "yy-mm-dd",
 		});		
 	});
