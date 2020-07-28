@@ -8,32 +8,15 @@ App::uses('AppController', 'Controller');
  */
 class MessagesController extends AppController {
 
-/**
- * Components
- *
- * @var array
- */
 	public $helpers = array('Js');
 	public $components = array('Paginator','Flash','RequestHandler');
 	public $uses = array('Message','User','Messagelist');
 
-/**
- * index method
- *
- * @return void
- */
 	public function index() {
 		$this->Message->recursive = 0;
 		$this->set('messages', $this->Paginator->paginate());
 	}
 
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
 	public function view($id = null) {
 		if (!$this->Message->exists($id)) {
 			throw new NotFoundException(__('Invalid message'));
@@ -42,11 +25,6 @@ class MessagesController extends AppController {
 		$this->set('message', $this->Message->find('first', $options));
 	}
 
-/**
- * add method
- *
- * @return void
- */
 	public function add() {
 		$currentUser=$this->User->find('first',array(				
 			'conditions' => array('user.email' =>$this->Auth->user('email')),
@@ -65,53 +43,6 @@ class MessagesController extends AppController {
 		}
 		$users = $this->User->find('list');
 		$this->set(compact('users','currentUser'));
-	}
-
-/**
- * edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function edit($id = null) {
-		if (!$this->Message->exists($id)) {
-			throw new NotFoundException(__('Invalid message'));
-		}
-		if ($this->request->is(array('post', 'put'))) {
-			if ($this->Message->save($this->request->data)) {
-				$this->Flash->success(__('The message has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Flash->error(__('The message could not be saved. Please, try again.'));
-			}
-		} else {
-			$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id));
-			$this->request->data = $this->Message->find('first', $options);
-		}
-		$users = $this->Message->User->find('list');
-		$this->set(compact('users'));
-	}
-
-/**
- * delete method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function delete($id = null) {
-		$this->Message->id = $id;
-		if (!$this->Message->exists()) {
-			throw new NotFoundException(__('Invalid message'));
-		}
-		$this->request->allowMethod('post', 'delete');
-		if ($this->Message->delete()) {
-			$this->Flash->success(__('The message has been deleted.'));
-		} else {
-			$this->Flash->error(__('The message could not be deleted. Please, try again.'));
-		}
-		return $this->redirect(array('action' => 'index'));
 	}
 
 	public function getUsers(){
@@ -150,15 +81,19 @@ class MessagesController extends AppController {
 	  	$this->Message->create();
 		if ($this->Message->saveAssociated($this->request->data)) {
 			$this->Messagelist->query("INSERT INTO messagelist (user_id,to_id,from_id,message_id) VALUES (".$currentUser['User']['id'].",
-				".$this->request->data['Message']['to_id'].",".$currentUser['User']['id'].",".$this->Message->getInsertID().")");
-				$this->Flash->success(__('The message has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-				return json_encode('The message has been saved');	
+				".$this->request->data['to_id'].",".$currentUser['User']['id'].",".$this->Message->getInsertID().")");
+
+			
 		} else {
 			$this->Flash->error(__('The message could not be saved. Please, try again.'));
-		}
-		return(json_encode($this->request->data));
-			
-        
+		}		
+
+		$options = array(
+			'conditions' => array('to_id' => $this->request->data['to_id']),
+			'fields' => array('User.Name','Message.content','Message.created','Message.modified','Messagelist.*'),		
+			'order' => 'id DESC'
+		);
+		$messagelist = $this->Messagelist->find('all', $options);
+        return json_encode($messagelist);
 	}
 }

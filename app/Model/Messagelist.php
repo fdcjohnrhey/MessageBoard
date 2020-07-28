@@ -10,18 +10,8 @@ App::uses('AppModel', 'Model');
  */
 class Messagelist extends AppModel {
 
-/**
- * Use table
- *
- * @var mixed False or table name
- */
 	public $useTable = 'messagelist';
 
-/**
- * Validation rules
- *
- * @var array
- */
 	public $validate = array(
 		'user_id' => array(
 			'numeric' => array(
@@ -45,13 +35,7 @@ class Messagelist extends AppModel {
 		),
 	);
 
-	// The Associations below have been created with all possible keys, those that are not needed can be removed
 
-/**
- * belongsTo associations
- *
- * @var array
- */
 	public $belongsTo = array(
 		'User' => array(
 			'className' => 'User',

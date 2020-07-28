@@ -19,14 +19,9 @@
 
 
 <script>
-	$(function() {
+	$(document).ready(function() { 	
 		$('#datepick').datepicker({
 			dateFormat: "yy-mm-dd",
-		});
-
-		
+		});		
 	});
-	function dateChanged(ev) {
-		console.log(ev);
-	}
 </script>

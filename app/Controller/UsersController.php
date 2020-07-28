@@ -8,19 +8,9 @@ App::uses('AppController', 'Controller');
  */
 class UsersController extends AppController {
 
-/**
- * Components
- *
- * @var array
- */
 	public $uses = array('User','Message');
 	public $components = array('Paginator','Session','Flash','RequestHandler');
 
-/**
- * index method
- *
- * @return void
- */
 	public function beforeFilter(){
 		// allow register page to be viewed without login
 		$this->Auth->allow('add','login');
@@ -86,13 +76,6 @@ class UsersController extends AppController {
 		$this->set(array('users'=> $this->Paginator->paginate(),'currentUser'=>$currentUser));
 	}
 
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
 	public function view($id = null) {
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Invalid user'));
@@ -101,11 +84,6 @@ class UsersController extends AppController {
 		$this->set('user', $this->User->find('first', $options));
 	}
 
-/**
- * add method
- *
- * @return void
- */
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->User->create();
@@ -121,13 +99,6 @@ class UsersController extends AppController {
 		}
 	}
 
-/**
- * edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
 	public function edit($id = null) {
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Invalid user'));
@@ -162,14 +133,7 @@ class UsersController extends AppController {
 			$this->request->data = $this->User->find('first', $options);
 		}
 	}
-
-/**
- * delete method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+	
 	public function delete($id = null) {
 		$this->User->id = $id;
 		if (!$this->User->exists()) {

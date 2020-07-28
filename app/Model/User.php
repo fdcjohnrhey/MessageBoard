@@ -6,11 +6,6 @@ App::uses('AppModel', 'Model');
  */
 class User extends AppModel {
 
-/**
- * Validation rules
- *
- * @var array
- */
 	public $validate = array(
 		'name' => array(			
 			'lengthBetween' => array(

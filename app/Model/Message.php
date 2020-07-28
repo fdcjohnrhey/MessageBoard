@@ -7,11 +7,6 @@ App::uses('AppModel', 'Model');
  */
 class Message extends AppModel {
 
-/**
- * Validation rules
- *
- * @var array
- */
 	public $validate = array(
 		'content' => array(
 			'notBlank' => array(
@@ -20,13 +15,6 @@ class Message extends AppModel {
 		),
 	);
 
-	// The Associations below have been created with all possible keys, those that are not needed can be removed
-
-/**
- * hasMany associations
- *
- * @var array
- */
 	public $hasMany = array(
 		'Messagelist' => array(
 			'className' => 'Messagelist',

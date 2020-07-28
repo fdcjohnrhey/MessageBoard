@@ -1,45 +1,21 @@
-<?php var_dump($messagelist[9]); ?>
-<div class="messagelists view">
-<h2>Conversation with <?php echo $convoWith['User']['name']; ?></h2>
-<form id="reply_message" name="reply_message" action="javascript:void(0);" method="post">
-	<input type="text" name="content" id="new_message">
-	<input type="hidden" name="to_id" id="new_message" value="<?php echo $convoWith['User']['id']; ?>">	
-
-    <button id="send_message" name="send_message" type="button" class="btn btn-primary" style="float: left;">Reply</button>
-</form>
-<table cellpadding="0" cellspacing="0">
-	<thead>
-		<tr>
-				<th>Message</th>
-				<th>Created</th>
-				<th>From</th>
-				<th class="actions">Actions</th>
-		</tr>
-	</thead>
-	
-
-<?php echo $this->element('messagebody');?>
-</table>
-<div class="paging">
-<?php
-	
-echo $this->Html->script('jquery', false);
-$message_count = $this->Paginator->counter('%count%');
-echo $message_count;
-?>
-<a href="javascript:void(0);" id='show_more'>LOAD MORE</a>
-</div>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Profile'), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('View Message List'), array('controller' => 'messagelists', 'action' => 'index',$currentUser['User']['id']));?> </li>
-		<li><?php echo $this->Html->link(__('Logout'), array('controller' => 'users', 'action' => 'logout')); ?> </li>
-	</ul>
-</div>
 
 
+<tbody id="convoBody">
+	<?php foreach ($messagelist as $messages): ?>
+	<tr>
+		<td><?php echo h($messages['Message']['content']); ?>&nbsp;</td>
+		<td><?php echo h($messages['Message']['created']); ?>&nbsp;</td>
+		<?php foreach ($users as $user): ?>
+			<?php if($user['User']['id'] == $messages['Messagelist']['from_id']): ?>
+				<td><?php echo h($user['User']['name']); ?>&nbsp;</td>
+			<?php endif;?>
+		<?php endforeach; ?>
+		<td class="actions" style="width: 5%;">
+			<?php echo $this->Js->link('Delete', array('action' => 'delete', $messages['Messagelist']['id']),array('escape' => false, 'class'=>'confirm_delete','id'=>'confirm_delete'));?>
+		</td>
+	</tr>
+	<?php endforeach; ?>
+</tbody>
 <script type="text/javascript">
 	"use strict";
 	$(document).ready(function() { 		
