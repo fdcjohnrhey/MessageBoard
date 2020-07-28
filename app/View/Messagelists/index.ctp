@@ -4,12 +4,12 @@
 	<table cellpadding="0" cellspacing="0">
 	<thead>
 	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('message_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('to_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('from_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
+		<th><?php echo $this->Paginator->sort('id'); ?></th>
+		<th><?php echo $this->Paginator->sort('message_id'); ?></th>
+		<th><?php echo $this->Paginator->sort('to_id'); ?></th>
+		<th><?php echo $this->Paginator->sort('from_id'); ?></th>
+		<th><?php echo $this->Paginator->sort('modified'); ?></th>
+		<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
 	<tbody>
