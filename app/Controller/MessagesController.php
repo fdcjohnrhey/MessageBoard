@@ -10,7 +10,7 @@ class MessagesController extends AppController {
 
 	public $helpers = array('Js');
 	public $components = array('Paginator','Flash','RequestHandler');
-	public $uses = array('Message','User','Messagelist');
+	public $uses = array('Message','User','Messagelist','Chat');
 
 	public function index() {
 		$this->Message->recursive = 0;
@@ -30,13 +30,53 @@ class MessagesController extends AppController {
 			'conditions' => array('user.email' =>$this->Auth->user('email')),
 			'fields' => array('User.id')
 		));
+		
+		
 		if ($this->request->is('post')) {
 			$this->Message->create();
-			if ($this->Message->saveAssociated($this->request->data)) {
-				$this->Messagelist->query("INSERT INTO messagelist (user_id,to_id,from_id,message_id) VALUES (".$currentUser['User']['id'].",
-					".$this->request->data['Message']['to_id'].",".$currentUser['User']['id'].",".$this->Message->getInsertID().")");
+			$this->Chat->create();
+			$chatData= array('Chat'=>array(
+				'person1' => $this->request->data['Message']['to_id'],
+				'person2' => $currentUser['User']['id']
+			));
+			$checkDuplicate = $this->Chat->find('first',array(
+				'conditions' => array(
+					'OR'=>array(
+						'person1' => $this->request->data['Message']['to_id'],
+						'person2' => $currentUser['User']['id']
+					),
+					'OR'=>array(
+						'person1' => $currentUser['User']['id'],
+						'person2' => $this->request->data['Message']['to_id']
+					),
+				)
+			));
+			
+			if ($this->Message->save($this->request->data)) {	
+				if($checkDuplicate){
+					$chat_id = $checkDuplicate['Chat']['id'];
+					
+				}else{				
+					$this->Chat->save($chatData);
+					$chat_id = $this->Chat->getInsertID();
+					
+				}		
+
+				$messagelistData=array('Messagelist'=>array(
+					'user_id' => $currentUser['User']['id'],
+					'to_id' => $this->request->data['Message']['to_id'],
+					'from_id' => $currentUser['User']['id'],
+					'message_id' => $this->Message->getInsertID(),
+					'chat_id' => $chat_id
+				));	
+
+				if($this->Messagelist->save($messagelistData)){
 					$this->Flash->success(__('The message has been saved.'));
 					return $this->redirect(array('controller'=>'messagelists','action' => 'index',$currentUser['User']['id']));
+				} 
+				else {
+					$this->Flash->error(__('The messagelist could not be saved. Please, try again.'));
+				}
 			} else {
 				$this->Flash->error(__('The message could not be saved. Please, try again.'));
 			}
@@ -51,9 +91,14 @@ class MessagesController extends AppController {
 		if($this->RequestHandler->isAjax()){
 	    	Configure::write('debug', 0);
 	  	}
+	  	$currentUser=$this->User->find('first',array(				
+			'conditions' => array('user.email' =>$this->Auth->user('email')),
+			'fields' => array('User.id')
+		));
+
 	  	$keyword = $this->request->query('search');
 		$users = $this->User->find('all', array(
-			'conditions' => array("User.name LIKE" => "%$keyword%"),
+			'conditions' => array("User.name LIKE" => "%$keyword%",'User.id !=' =>$currentUser['User']['id']),
 			'fields' => array('User.id', 'User.name as text'),
 			'group' => array('User.id ASC'),
 			'limit' =>5
@@ -80,11 +125,22 @@ class MessagesController extends AppController {
 		));
 
 	  	$this->Message->create();
-		if ($this->Message->saveAssociated($this->request->data)) {
-			$this->Messagelist->query("INSERT INTO messagelist (user_id,to_id,from_id,message_id) VALUES (".$currentUser['User']['id'].",
-				".$this->request->data['to_id'].",".$currentUser['User']['id'].",".$this->Message->getInsertID().")");
+		if($this->Message->saveAssociated($this->request->data)) {
+			$messagelistData=array('Messagelist'=>array(
+					'user_id' => $currentUser['User']['id'],
+					'to_id' => $this->request->data['to_id'],
+					'from_id' => $currentUser['User']['id'],
+					'message_id' => $this->Message->getInsertID(),
+					'chat_id' => $this->request->data['chat_id']
+			));	
+
+			if($this->Messagelist->save($messagelistData)){
+				$this->Flash->success(__('The message has been saved.'));
+			}else {
+				$this->Flash->error(__('The messagelist could not be saved. Please, try again.'));
+			}
 			
-		} else {
+		}else {
 			$this->Flash->error(__('The message could not be saved. Please, try again.'));
 		}		
 

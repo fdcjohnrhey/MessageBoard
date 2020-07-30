@@ -8,8 +8,8 @@ App::uses('AppController', 'Controller');
  */
 class MessagelistsController extends AppController {
 
-	public $uses = array('User','Messagelist');
-	public $components = array('Paginator','Flash');
+	public $uses = array('User', 'Messagelist', 'Chat');
+	public $components = array('Paginator', 'Flash');
 
 	public function index($id) {
 		$this->Messagelist->recursive = 0;
@@ -40,29 +40,32 @@ class MessagelistsController extends AppController {
 	}
 
 
-	public function view($to_id) {
+	public function view($chat_id) {
 		
 		$options = array(
-			'conditions' => array('OR'=>array('to_id' => $to_id,'user_id' => $to_id)),
+			'conditions' => array('chat_id'=>$chat_id),
 			'fields' => array('User.Name','Message.content','Message.created','Message.modified','Messagelist.*'),		
 			'order' => 'id DESC',
 			'limit' => 10
 		);
 		$this->paginate = $options;
 		$messageList = $this->paginate('Messagelist');
-		$currentUser=$this->User->find('first',array(				
+		$currentUser = $this->User->find('first',array(				
 			'conditions' => array('user.email' =>$this->Auth->user('email')),
 			'fields' => array('User.id')
 		));
-		if($to_id == $currentUser['User']['id']){
-			$getLast = $this->Messagelist->find('first',array('order' => array('Messagelist.id' => 'DESC')));
-			$convo=$getLast['Messagelist']['from_id'];
+		$chatData = $this->Chat->find('first',array(
+			'conditions' => array('id'=>$chat_id)
+		));
+		
+		if($chatData['Chat']['person1'] == $currentUser['User']['id']){
+			$convo = $chatData['Chat']['person2'];
 		}else{
-			$convo=$to_id;
+			$convo = $chatData['Chat']['person1'];
 		}
 		$convoWith = $this->User->find('first',array('conditions'=> 'id ='.$convo));
 		$users = $this->Messagelist->User->find('all',array('fields'=>array('id','name')));
-		$this->set(compact('messageList','currentUser','convoWith','users','convo'));
+		$this->set(compact('messageList','currentUser','convoWith','users','convo','chatData'));
 		$view = new View($this, false);
 		$view->viewPath = 'Elements';
 		$view->render('messagebody');

@@ -25,7 +25,7 @@
 		<td><?php echo h($messagelist['User']['name']); ?>&nbsp;</td>
 		<td><?php echo h($messagelist['Message']['modified']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $messagelist['Messagelist']['from_id'])); ?>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $messagelist['Messagelist']['chat_id'])); ?>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $messagelist['Messagelist']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $messagelist['Messagelist']['id']))); ?>
 		</td>
 	</tr>

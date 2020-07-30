@@ -47,6 +47,24 @@ class User extends AppModel {
 				'message' => 'Please enter a password.',
 			),
 		),
+		'gender' => array(		
+			'notBlank' => array(
+				'rule' => array('notBlank'),
+				'message' => 'Please select a gender.',
+			),
+		),
+		'birthdate' => array(		
+			'notBlank' => array(
+				'rule' => array('notBlank'),
+				'message' => 'Please enter a birthdate.',
+			),
+		),
+		'hubby' => array(		
+			'notBlank' => array(
+				'rule' => array('notBlank'),
+				'message' => 'Please enter a hobby.',
+			),
+		),
 	);
 
 	public function matchPasswords($data){

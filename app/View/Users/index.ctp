@@ -1,4 +1,4 @@
-<div class="users index">
+<div class="users index" style="width: 50%;">
 	<div style="float: right;">
 	<?php
 		if(AuthComponent::user()){
@@ -15,14 +15,12 @@
 	
 </div>
 
-<div class="actions">
+<div class="actions" style="width: 30%;">
 	<ul style="display: flex;">
 		<li>
 			<h3><?php echo __('Profile'); ?></h3>
 		</li>
-		<li style='margin-left: 80px;'>
-			<?php echo $this->Html->link('Edit Profile',array('controller'=>'users','action'=>'edit',$currentUser['User']['id']));?>
-		</li>
+		
 	</ul>	
 	
 	<?php echo $this->Html->image($currentUser['User']['image'], array('border' => '0','width'=>'200')); ?>
@@ -46,6 +44,9 @@
 		<li>Last Login: <?php echo $currentUser['User']['last_login_time'] ?></li>
 		<li>Hobby:</li>
 		<li><textarea style="height: 200px;font-size: 90%;" readonly><?php echo $currentUser['User']['hubby'] ?></textarea></li>
+		<li style='width: 40%;'>
+			<?php echo $this->Html->link('Edit Profile',array('controller'=>'users','action'=>'edit',$currentUser['User']['id']));?>
+		</li>
 	</ul>
 </div>
 

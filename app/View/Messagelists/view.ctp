@@ -1,3 +1,4 @@
+
 <div class="messagelists view">
 <h2>Conversation with <?php echo $convoWith['User']['name']; ?></h2>
 <form id="reply-message" name="reply_message" action="javascript:void(0);" method="post" style="margin-bottom: 50px;width: 100%">
@@ -35,16 +36,18 @@ $message_count = $this->Paginator->counter('%count%');
 	$(document).ready(function() { 		
 		var base_url = '<?php echo $this->webroot; ?>';
 		var from= '<?php echo $convoWith['User']['id']; ?>';
-		var limit=10;
+		var limit= 10;
 		var message_count = "<?php echo $message_count; ?>";
 		$('#send-message').attr('disabled','disabled');	
 		$('#new-message').val('');
 
 		if(message_count< limit){
-			limit = message_count;
+			// limit = message_count;
 			$('#show-more').addClass('disabled');
 		}
-		
+
+		var url = $(location).attr('href');
+		var urlKey = url.replace(/\/\s*$/, "").split('/').pop();
 		$('#new-message').on('keyup', function(){
 			var message = $(this).val();
 			if(message!=""){		
@@ -79,11 +82,12 @@ $message_count = $this->Paginator->counter('%count%');
 
 		$('#send-message').click(function(){
 			var message = $('#new-message').val();
-			
+			console.log(limit);
 			var data = {
 				to_id: "<?php echo $convoWith['User']['id']; ?>",
 				content: message,
-				limit : limit
+				limit : limit,
+				chat_id: urlKey
 			};
 			$.ajax({
 				type:"POST",
