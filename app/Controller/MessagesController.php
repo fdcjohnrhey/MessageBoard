@@ -145,7 +145,7 @@ class MessagesController extends AppController {
 		}		
 
 		$options = array(
-			'conditions' => array('to_id' => $this->request->data['to_id']),
+			'conditions' => array('chat_id' => $this->request->data['chat_id']),
 			'fields' => array('User.Name','Message.content','Message.created','Message.modified','Messagelist.*'),		
 			'order' => 'id DESC',
 			'limit' => $this->request->data['limit']
@@ -156,7 +156,7 @@ class MessagesController extends AppController {
 		$users = $this->Messagelist->User->find('all',array('fields'=>array('id','name')));
         	$view = new View($this, false);
 		$view->viewPath = 'Elements';
-		$view->set(compact('messageList','users'));		
+		$view->set(compact('messageList','users','currentUser'));		
 		
 		return json_encode($view->render('messagebody'));
 	}

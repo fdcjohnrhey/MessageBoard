@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 24, 2020 at 02:26 PM
+-- Generation Time: Jul 30, 2020 at 11:26 AM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.1.32
 
@@ -25,6 +25,27 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `chats`
+--
+
+CREATE TABLE `chats` (
+  `id` int(11) NOT NULL,
+  `person1` int(11) NOT NULL,
+  `person2` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `chats`
+--
+
+INSERT INTO `chats` (`id`, `person1`, `person2`) VALUES
+(2, 66, 58),
+(3, 67, 58),
+(6, 59, 58);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `messagelist`
 --
 
@@ -33,18 +54,49 @@ CREATE TABLE `messagelist` (
   `user_id` int(11) NOT NULL,
   `message_id` int(11) NOT NULL,
   `to_id` int(11) NOT NULL,
-  `from_id` int(11) NOT NULL
+  `from_id` int(11) NOT NULL,
+  `chat_id` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `messagelist`
 --
 
-INSERT INTO `messagelist` (`id`, `user_id`, `message_id`, `to_id`, `from_id`) VALUES
-(11, 58, 39, 58, 58),
-(12, 58, 40, 65, 58),
-(13, 58, 48, 68, 58),
-(14, 58, 49, 59, 58);
+INSERT INTO `messagelist` (`id`, `user_id`, `message_id`, `to_id`, `from_id`, `chat_id`) VALUES
+(20, 58, 58, 66, 58, '2'),
+(21, 58, 59, 66, 58, '2'),
+(29, 58, 70, 66, 58, '2'),
+(30, 58, 71, 66, 58, '2'),
+(31, 58, 72, 66, 58, '2'),
+(33, 58, 74, 66, 58, '2'),
+(34, 58, 75, 66, 58, '2'),
+(35, 58, 76, 66, 58, '2'),
+(40, 58, 81, 66, 58, '2'),
+(44, 58, 85, 66, 58, '2'),
+(45, 58, 86, 66, 58, '2'),
+(46, 58, 87, 66, 58, '2'),
+(47, 58, 88, 66, 58, '2'),
+(49, 58, 90, 66, 58, '2'),
+(51, 58, 92, 66, 58, '2'),
+(52, 58, 93, 66, 58, '2'),
+(55, 58, 96, 66, 58, '2'),
+(56, 58, 97, 66, 58, '2'),
+(58, 58, 99, 66, 58, '2'),
+(59, 58, 100, 66, 58, '2'),
+(61, 58, 102, 66, 58, '2'),
+(64, 66, 105, 58, 66, '2'),
+(65, 67, 106, 58, 67, '3'),
+(66, 66, 107, 58, 66, '2'),
+(68, 58, 119, 67, 58, '3'),
+(69, 58, 120, 66, 58, '2'),
+(70, 58, 121, 66, 58, '2'),
+(71, 58, 122, 67, 58, '3'),
+(72, 58, 123, 67, 58, '3'),
+(73, 58, 124, 67, 58, '3'),
+(74, 58, 125, 67, 58, '3'),
+(75, 58, 126, 67, 58, '3'),
+(76, 58, 127, 67, 58, '3'),
+(81, 58, 132, 66, 58, '2');
 
 -- --------------------------------------------------------
 
@@ -107,7 +159,92 @@ INSERT INTO `messages` (`id`, `content`, `created`, `modified`) VALUES
 (46, 'asds', '2020-07-24 11:42:08', '2020-07-24 11:42:08'),
 (47, 'resdf', '2020-07-24 11:45:33', '2020-07-24 11:45:33'),
 (48, 'asdssasd', '2020-07-24 12:07:43', '2020-07-24 12:07:43'),
-(49, 'asdssasdsads', '2020-07-24 12:08:09', '2020-07-24 12:08:09');
+(49, 'asdssasdsads', '2020-07-24 12:08:09', '2020-07-24 12:08:09'),
+(50, 'asdsass', '2020-07-27 11:03:41', '2020-07-27 11:03:41'),
+(51, 'test', '2020-07-27 11:09:50', '2020-07-27 11:09:50'),
+(52, 'asdaxscv', '2020-07-27 11:11:13', '2020-07-27 11:11:13'),
+(53, 'azzxx', '2020-07-27 11:11:21', '2020-07-27 11:11:21'),
+(54, 'yrdy', '2020-07-27 11:35:19', '2020-07-27 11:35:19'),
+(55, 'yrdy', '2020-07-27 11:35:43', '2020-07-27 11:35:43'),
+(56, 'sadsa', '2020-07-27 11:43:17', '2020-07-27 11:43:17'),
+(57, 'asd', '2020-07-27 11:46:06', '2020-07-27 11:46:06'),
+(58, 'asds', '2020-07-27 11:53:12', '2020-07-27 11:53:12'),
+(59, 'zx', '2020-07-27 12:04:49', '2020-07-27 12:04:49'),
+(60, 'zx', '2020-07-27 12:06:11', '2020-07-27 12:06:11'),
+(61, 'zx', '2020-07-27 12:06:12', '2020-07-27 12:06:12'),
+(62, 'asd', '2020-07-27 12:09:11', '2020-07-27 12:09:11'),
+(63, 'zx', '2020-07-27 12:10:37', '2020-07-27 12:10:37'),
+(64, 'asds', '2020-07-27 12:12:29', '2020-07-27 12:12:29'),
+(65, '', '2020-07-27 12:12:29', '2020-07-27 12:12:29'),
+(66, '', '2020-07-27 12:14:30', '2020-07-27 12:14:30'),
+(67, 'll', '2020-07-27 12:14:30', '2020-07-27 12:14:30'),
+(68, 'asds', '2020-07-27 12:27:24', '2020-07-27 12:27:24'),
+(69, 'sad', '2020-07-27 12:39:48', '2020-07-27 12:39:48'),
+(70, 'ssd', '2020-07-27 13:51:59', '2020-07-27 13:51:59'),
+(71, 'asd', '2020-07-28 03:24:45', '2020-07-28 03:24:45'),
+(72, 'asd', '2020-07-28 03:24:54', '2020-07-28 03:24:54'),
+(73, 'asd', '2020-07-28 03:25:44', '2020-07-28 03:25:44'),
+(74, 'asd', '2020-07-28 03:26:14', '2020-07-28 03:26:14'),
+(75, '234e', '2020-07-28 03:26:36', '2020-07-28 03:26:36'),
+(76, 'lo', '2020-07-28 03:38:48', '2020-07-28 03:38:48'),
+(77, 'asds;;', '2020-07-28 03:39:19', '2020-07-28 03:39:19'),
+(78, 'cc', '2020-07-28 03:40:13', '2020-07-28 03:40:13'),
+(79, 'kl', '2020-07-28 03:41:01', '2020-07-28 03:41:01'),
+(80, 'd', '2020-07-28 03:42:32', '2020-07-28 03:42:32'),
+(81, 'asd', '2020-07-28 03:43:08', '2020-07-28 03:43:08'),
+(82, 'xc', '2020-07-28 03:43:41', '2020-07-28 03:43:41'),
+(83, 'cc', '2020-07-28 03:45:54', '2020-07-28 03:45:54'),
+(84, 'hg', '2020-07-28 03:46:42', '2020-07-28 03:46:42'),
+(85, 'hjh', '2020-07-28 03:47:05', '2020-07-28 03:47:05'),
+(86, 'df', '2020-07-28 03:49:29', '2020-07-28 03:49:29'),
+(87, 'sa', '2020-07-28 04:04:29', '2020-07-28 04:04:29'),
+(88, 'sd', '2020-07-28 04:09:32', '2020-07-28 04:09:32'),
+(89, 'ddd', '2020-07-28 04:10:31', '2020-07-28 04:10:31'),
+(90, 'asd', '2020-07-28 08:49:04', '2020-07-28 08:49:04'),
+(91, 'asd1', '2020-07-28 08:50:08', '2020-07-28 08:50:08'),
+(92, 'er', '2020-07-28 08:51:51', '2020-07-28 08:51:51'),
+(93, 'asd', '2020-07-28 08:53:44', '2020-07-28 08:53:44'),
+(94, '\\;;', '2020-07-28 08:55:54', '2020-07-28 08:55:54'),
+(95, '[[', '2020-07-28 08:56:20', '2020-07-28 08:56:20'),
+(96, 'tyu', '2020-07-28 08:57:18', '2020-07-28 08:57:18'),
+(97, 'mn', '2020-07-28 08:57:52', '2020-07-28 08:57:52'),
+(98, 'ss', '2020-07-28 08:58:55', '2020-07-28 08:58:55'),
+(99, 'ssa', '2020-07-28 08:59:01', '2020-07-28 08:59:01'),
+(100, 'df', '2020-07-28 08:59:25', '2020-07-28 08:59:25'),
+(101, 'ewrwr', '2020-07-28 09:08:04', '2020-07-28 09:08:04'),
+(102, 'asddx', '2020-07-28 09:12:45', '2020-07-28 09:12:45'),
+(103, 'Zxz', '2020-07-28 09:15:50', '2020-07-28 09:15:50'),
+(104, 'sds', '2020-07-28 09:23:47', '2020-07-28 09:23:47'),
+(105, 'test1', '2020-07-28 09:35:31', '2020-07-28 09:35:31'),
+(106, 'a', '2020-07-28 09:36:32', '2020-07-28 09:36:32'),
+(107, 'aer', '2020-07-28 09:36:58', '2020-07-28 09:36:58'),
+(108, 'yrdy11', '2020-07-29 08:06:37', '2020-07-29 08:06:37'),
+(109, '1123', '2020-07-29 08:07:18', '2020-07-29 08:07:18'),
+(110, 'qwew', '2020-07-29 08:08:02', '2020-07-29 08:08:02'),
+(111, 'asdsass', '2020-07-29 08:08:35', '2020-07-29 08:08:35'),
+(112, 'test', '2020-07-29 08:10:39', '2020-07-29 08:10:39'),
+(113, 'asds', '2020-07-29 08:14:43', '2020-07-29 08:14:43'),
+(114, '1232', '2020-07-29 08:15:50', '2020-07-29 08:15:50'),
+(115, 'asdsass', '2020-07-29 08:17:11', '2020-07-29 08:17:11'),
+(116, 'test', '2020-07-29 08:36:32', '2020-07-29 08:36:32'),
+(117, '1222', '2020-07-29 08:37:40', '2020-07-29 08:37:40'),
+(118, 'ass', '2020-07-29 11:11:31', '2020-07-29 11:11:31'),
+(119, 'a', '2020-07-29 11:12:31', '2020-07-29 11:12:31'),
+(120, 'ssd', '2020-07-30 04:14:14', '2020-07-30 04:14:14'),
+(121, '123', '2020-07-30 04:14:19', '2020-07-30 04:14:19'),
+(122, '23', '2020-07-30 04:14:33', '2020-07-30 04:14:33'),
+(123, 'sdfe', '2020-07-30 04:14:39', '2020-07-30 04:14:39'),
+(124, 'asd', '2020-07-30 04:15:21', '2020-07-30 04:15:21'),
+(125, 'sd', '2020-07-30 04:16:12', '2020-07-30 04:16:12'),
+(126, 'df', '2020-07-30 04:16:45', '2020-07-30 04:16:45'),
+(127, 'asd1', '2020-07-30 04:18:31', '2020-07-30 04:18:31'),
+(128, 'testing', '2020-07-30 09:51:24', '2020-07-30 09:51:24'),
+(129, 'asdd', '2020-07-30 09:52:00', '2020-07-30 09:52:00'),
+(130, 'sd', '2020-07-30 09:52:10', '2020-07-30 09:52:10'),
+(131, 'sds', '2020-07-30 09:53:29', '2020-07-30 09:53:29'),
+(132, 'sds', '2020-07-30 09:54:10', '2020-07-30 09:54:10'),
+(133, 'sd', '2020-07-30 09:56:01', '2020-07-30 09:56:01'),
+(134, 'asdsdsadsadsadsadcfsdfqwerqweqwewqessssssssssssssssssssssssssssssssssss', '2020-07-30 11:15:27', '2020-07-30 11:15:27');
 
 -- --------------------------------------------------------
 
@@ -137,11 +274,11 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `image`, `gender`, `birthdate`, `hubby`, `last_login_time`, `created`, `modified`, `created_ip`, `modified_ip`) VALUES
 (57, 'jpags.me', 'test123@test.com', '10c1b59ea6239eca0378ae906243c4ab549624b3', NULL, NULL, NULL, NULL, '2020-07-22 06:19:03', '2020-07-21 13:56:18', '2020-07-22 06:19:03', '', ''),
-(58, 'test123', 'test1@test.com', 'e9f3f98c81270c55a6ee378f5e83e92dd3fe37e6', 'Desert.jpg', '2', '2019-08-03', 'For 50 years, WWF has been protecting the future of nature. The world\'s leading conservation organization, WWF works in 100 countries and is supported by 1.2 million members in the United States and close to 5 million globally.zxcxz', '2020-07-23 03:14:18', '2020-07-21 14:11:34', '2020-07-24 05:03:53', '', '::1'),
+(58, 'user58', 'test1@test.com', 'e9f3f98c81270c55a6ee378f5e83e92dd3fe37e6', 'Desert.jpg', '1', '2019-06-11', 'For 50 years, WWF has been protecting the future of nature. The world\'s leading conservation organization, WWF works in 100 countries and is supported by 1.2 million members in the United States and close to 5 million globally.', '2020-07-28 11:37:23', '2020-07-21 14:11:34', '2020-07-30 04:32:49', '', '::1'),
 (59, 'jpags', 'jpags@test.com', '10c1b59ea6239eca0378ae906243c4ab549624b3', NULL, NULL, NULL, NULL, '2020-07-22 10:57:04', '2020-07-22 03:42:42', '2020-07-22 10:57:04', '', ''),
 (64, 'ilog', 'test1@test1.com', 'e9f3f98c81270c55a6ee378f5e83e92dd3fe37e6', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00', '2020-07-22 04:37:31', '2020-07-22 04:37:31', '', ''),
 (65, 'jpags', 'j@test.com', 'e9f3f98c81270c55a6ee378f5e83e92dd3fe37e6', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00', '2020-07-22 04:40:35', '2020-07-22 04:40:35', '', ''),
-(66, 'test123', 'test@test.com', 'e9f3f98c81270c55a6ee378f5e83e92dd3fe37e6', NULL, '0', '2020-07-04', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', '2020-07-22 02:26:19', '2020-07-22 04:52:23', '2020-07-22 02:34:43', '', '::1'),
+(66, 'user66', 'test@test.com', 'e9f3f98c81270c55a6ee378f5e83e92dd3fe37e6', NULL, '0', '2020-07-04', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', '2020-07-28 10:44:04', '2020-07-22 04:52:23', '2020-07-28 10:44:04', '', '::1'),
 (67, 'test123', 'test@1test.com', 'e9f3f98c81270c55a6ee378f5e83e92dd3fe37e6', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00', '2020-07-22 04:54:47', '2020-07-22 04:54:47', '', ''),
 (68, 'kol', 'test11@test.com', 'e9f3f98c81270c55a6ee378f5e83e92dd3fe37e6', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00', '2020-07-22 04:55:48', '2020-07-22 04:55:48', '', ''),
 (69, 'jpags.me1', 'test121@test.com', 'e9f3f98c81270c55a6ee378f5e83e92dd3fe37e6', NULL, NULL, NULL, NULL, '2020-07-22 10:57:38', '2020-07-22 04:58:04', '2020-07-22 10:57:38', '', ''),
@@ -151,6 +288,12 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `image`, `gender`, `birt
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `chats`
+--
+ALTER TABLE `chats`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `messagelist`
@@ -175,16 +318,22 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `chats`
+--
+ALTER TABLE `chats`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `messagelist`
 --
 ALTER TABLE `messagelist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 
 --
 -- AUTO_INCREMENT for table `users`

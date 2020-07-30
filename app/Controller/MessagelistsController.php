@@ -91,6 +91,11 @@ class MessagelistsController extends AppController {
 
         $this->autoRender=false;
 		$this->layout = null ;
+		$currentUser = $this->User->find('first',array(				
+			'conditions' => array('user.email' =>$this->Auth->user('email')),
+			'fields' => array('User.id')
+		));
+
 		$options = array(
 			'conditions' => array('OR'=>array('to_id' => $this->request->data['to_id'],'from_id' => $this->request->data['to_id'])),
 			'fields' => array('User.Name','Message.content','Message.created','Message.modified','Messagelist.*'),		
@@ -102,7 +107,7 @@ class MessagelistsController extends AppController {
 		$users = $this->Messagelist->User->find('all',array('fields'=>array('id','name')));
 		$view = new View($this, false);
 		$view->viewPath = 'Elements';
-		$view->set(compact('messageList','users'));	
+		$view->set(compact('messageList','users','currentUser'));	
 		
 		return json_encode($view->render('messagebody'));
 	}

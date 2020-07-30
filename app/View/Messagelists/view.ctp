@@ -7,11 +7,9 @@
 
     <button id="send-message" name="send-message" type="button" class="btn btn-primary" style="float: right;">Reply Message</button>
 </form>
-<table cellpadding="0" cellspacing="0">	
-	
-
-<?php echo $this->element('messagebody');?>
-</table>
+<div>
+	<?php echo $this->element('messagebody');?>
+</div>
 <div class="paging">
 <?php
 	
@@ -60,8 +58,7 @@ $message_count = $this->Paginator->counter('%count%');
 		$('#convo-body').on('click', '.confirm-delete', function(){
 			var result = confirm('Are you sure you want to delete this?');
 			if(result) {
-				console.log($(this).closest('tr'));
-				var delete_this = $(this).closest('tr');
+				var delete_this = $(this).closest('div');
 				$.ajax({
 					type:"POST",
 					url: $(this).attr('href'),
@@ -126,7 +123,7 @@ $message_count = $this->Paginator->counter('%count%');
 				data: data,
 				dataType: "json",
 				success:function(response){	
-
+					console.log(response);
 				},
 				error:function(error){
 					console.log(error);
