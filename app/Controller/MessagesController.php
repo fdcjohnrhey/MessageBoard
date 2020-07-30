@@ -108,7 +108,7 @@ class MessagesController extends AppController {
 			array_push($list,$value['User']);
 		}
 			
-    		return json_encode($list);	
+    	return json_encode($list);	
 	}
 
 	public function AddNewMessage(){
